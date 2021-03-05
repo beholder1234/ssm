@@ -1,6 +1,4 @@
 # 基于ssm电梯服务管理信息系统的设计与实现
-是给电梯企业内部使用的一款系统。实现有数据资源，人事，电梯业务管理等业务的综合系统
-# 基于ssm电梯服务管理信息系统的设计与实现
 
 ## 技术支持
 
@@ -69,13 +67,13 @@
 
 > 电梯业务主要有安装，安检和年审三类，安装是在整机销售通过审核后生成的，而安检和年审是根据处理时间提前几天或几个月自动生成的。有管理层的技术总监来分派业务给技术员，最后由技术处理完成。
 
-![image-20210305190853819](https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305190853819.png)
+<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305190853819.png" alt="image-20210305190853819" style="zoom:50%;" />
 
 #### （2）销售流程图
 
 > 销售业务流程是指电梯企业对整机与电梯零件的销售过程，首先，业务部的职员申请销售单，填写销售客户，所销售商品和销售数量与单格后提交给系统，由销售经理通过审核，其中若库存量小于要求量时，则要完成相应商品的采购入库。商品出库，完成商品销售
 
-<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305191043233.png" alt="image-20210305191043233" style="zoom:80%;" />
+<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305191043233.png" alt="image-20210305191043233" style="zoom: 50%;" />
 
 
 
@@ -85,21 +83,21 @@
 
 > 采购业务流程是指对电梯或相关零件的采购过程，首先由销售部职员申请销售单，在填入供应商信息，商品和采购数量与单价后提交给系统，采购经理对订单进行审核，然后由采购员进行采购，由货运员取货并运到相应仓库，最后由库管员入库，完成商品采购。
 
-<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305191241220.png" alt="image-20210305191241220" style="zoom:70%;" />
+<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305191241220.png" alt="image-20210305191241220" style="zoom: 50%;" />
 
 ## 5. 图形界面
 
 #### （1）登陆界面
 
-![image-20210305192556001](https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305192556001.png)
+<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305192556001.png" alt="image-20210305192556001" style="zoom:50%;" />
 
 #### （2）操作界面
 
-![image-20210305192659899](https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305192659899.png)
+<img src="https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/image-20210305192659899.png" alt="image-20210305192659899" style="zoom:50%;" />
 
 #### （3） 界面操作——登陆
 
-![f](https://gitee.com/beholder1234/PersonalOnlineSource/raw/master/PictureFromTypora/f.gif)
+![f](https://gitee.com/beholder1234/PersonalOnlineSource/blob/master/PictureFromTypora/f.gif)
 
 
 
