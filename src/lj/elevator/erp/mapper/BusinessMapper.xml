@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.BusinessMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Business" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TYPE" property="type" jdbcType="CHAR" />
+    <result column="EQUIPMENTID" property="equipmentid" jdbcType="INTEGER" />
+    <result column="CREATETIME" property="createtime" jdbcType="DATE" />
+    <result column="STARTTIME" property="starttime" jdbcType="DATE" />
+    <result column="ENDTIME" property="endtime" jdbcType="DATE" />
+    <result column="ORDERID" property="orderid" jdbcType="INTEGER" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    
+    
+    
+    
+    <association property="equipment" javaType="lj.elevator.erp.pojo.Equipment">
+    	<id column="EQUIPMENTID" property="id" jdbcType="INTEGER" />
+    	<result column="NUM" property="num" jdbcType="VARCHAR" />
+    	<result column="CODE" property="code" jdbcType="INTEGER" />
+    	<result column="MODEL" property="model" jdbcType="VARCHAR" />
+   	 	<result column="ENAME" property="name" jdbcType="VARCHAR" />
+    	<result column="EADDRESS" property="address" jdbcType="VARCHAR" />
+    	<result column="CUSTOMERID" property="customerid" jdbcType="INTEGER" />
+    	
+    	<association property="customer" javaType="lj.elevator.erp.pojo.Customer">
+    		<id column="CUSTOMERID" property="id" jdbcType="INTEGER" />
+    		<result column="CNAME" property="name" jdbcType="VARCHAR" />
+    		<result column="CCONTACT" property="contact" jdbcType="VARCHAR" />
+    		<result column="CTELE" property="tele" jdbcType="VARCHAR" />
+    		<result column="CEMAIL" property="email" jdbcType="VARCHAR" />
+    		<result column="CADDRESS" property="address" jdbcType="VARCHAR" />
+    	</association> 
+    		
+    </association>  
+    
+    
+    
+    
+    
+    
+    
+  </resultMap>
+  
+
+  
+   <select id="selectBusinessByKey" parameterType="int"  resultMap="BaseResultMap">
+   
+   SELECT
+  b.`ID`,
+  b.`TYPE`,
+  b.`EQUIPMENTID`,
+  b.`CREATETIME`,
+  b.`STARTTIME`,
+  b.`ENDTIME`,
+  b.`ORDERID`,
+  b.`STATE`,
+  
+  e.`NUM`,
+  e.`CODE`,
+  e.`MODEL`,
+  e.`NAME` ENAME,
+  e.`ADDRESS` EADDRESS,
+  e.`CUSTOMERID`,
+  
+  c.`NAME` CNAME,
+  c.`CONTACT` CCONTACT,
+  c.`TELE` CTELE,
+  c.`EMAIL` CEMAIL, 
+  c.`ADDRESS` CADDRESS
+  
+  
+	FROM `business`  b
+	LEFT JOIN `equipment`  e
+	ON b.`EQUIPMENTID` = e.`ID`
+	LEFT JOIN `customer` c
+	ON e.`CUSTOMERID` = c.`ID`
+	
+	where b.`ID` = #{id,jdbcType=INTEGER}
+   
+   </select>
+  
+  
+  
+   <select id="selectByUtil" parameterType="lj.elevator.erp.utils.ConditionUtil"  resultMap="BaseResultMap">
+  
+  
+  SELECT
+  b.`ID`,
+  b.`TYPE`,
+  b.`EQUIPMENTID`,
+  b.`CREATETIME`,
+  b.`STARTTIME`,
+  b.`ENDTIME`,
+  b.`ORDERID`,
+  b.`STATE`,
+  
+  e.`NUM`,
+  e.`CODE`,
+  e.`MODEL`,
+  e.`NAME` ENAME,
+  e.`ADDRESS` EADDRESS,
+  e.`CUSTOMERID`,
+  
+  c.`NAME` CNAME,
+  c.`CONTACT` CCONTACT,
+  c.`TELE` CTELE,
+  c.`EMAIL` CEMAIL, 
+  c.`ADDRESS` CADDRESS
+  
+  
+FROM `business`  b
+LEFT JOIN `equipment`  e
+ON b.`EQUIPMENTID` = e.`ID`
+LEFT JOIN `customer` c
+ON e.`CUSTOMERID` = c.`ID`
+<where>
+
+	<if test="conditionS.size() != 0" >
+
+		<if test="conditionS[0] != null">
+			AND b.`TYPE`= #{conditionS[0]} 
+		
+		</if>
+		<if test="conditionS[1] != null">
+			AND b.`STATE`= #{conditionS[1]} 
+		</if>
+		<if test="conditionS[2] != null">
+			AND c.`NAME`= #{conditionS[2]} 
+		</if>
+		<if test="conditionS[3] != null">
+			AND e.`NUM`= #{conditionS[3]}
+		</if>
+		<if test="conditionS[4] != null">
+			AND e.`CODE`= #{conditionS[4]} 
+		</if>
+		<if test="conditionS[5] != null">
+			AND b.`CREATETIME` &gt;= #{conditionS[5]} 
+		</if>
+		<if test="conditionS[6] != null">
+			AND b.`ENDTIME`	&lt;= #{conditionS[6]} 
+		</if>
+	</if>
+
+</where>  
+order by  b.`STATE`  
+LIMIT #{start},#{size}    
+    
+
+  
+  
+  
+  </select>
+  
+  
+  
+  
+  <select id="countByUtil" parameterType="list" resultType="int">
+  SELECT
+
+count(*) NUM    
+FROM `business`  b
+LEFT JOIN `equipment`  e
+ON b.`EQUIPMENTID` = e.`ID`
+LEFT JOIN `customer` c
+ON e.`CUSTOMERID` = c.`ID`    
+  
+<where>
+	<if test="list.size() != 0" >
+		<if test="list.get(0) != null">
+			AND b.`TYPE` like '${list.get(0)}'
+		</if>
+		<if test="list.get(1) != null">
+			AND b.`STATE` like '${list.get(1)}'
+		</if>
+		<if test="list.get(2) != null">
+			AND c.`NAME` like '${list.get(2)}'
+		</if>
+		<if test="list.get(3) != null">
+			AND e.`NUM` like '${list.get(3)}'
+		</if>
+		<if test="list.get(4) != null">
+			AND e.`CODE` like '${list.get(4)}'
+		</if>
+		<if test="list.get(5) != null">
+			AND b.`CREATETIME` &gt;= '${list.get(5)}'
+		</if>
+		<if test="list.get(6) != null">
+			AND b.`ENDTIME` &lt;= '${list.get(6)}'
+		</if>
+	</if>
+</where>  
+
+  </select>
+  
+
+
+
+
+
+
+
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TYPE, EQUIPMENTID, CREATETIME, STARTTIME, ENDTIME, ORDERID, STATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.BusinessExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from business
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from business
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.BusinessExample" >
+    delete from business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Business" >
+    insert into business (ID, TYPE, EQUIPMENTID, 
+      CREATETIME, STARTTIME, ENDTIME, 
+      ORDERID, STATE)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=CHAR}, #{equipmentid,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=DATE}, #{starttime,jdbcType=DATE}, #{endtime,jdbcType=DATE}, 
+      #{orderid,jdbcType=INTEGER}, #{state,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Business" >
+    insert into business
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="equipmentid != null" >
+        EQUIPMENTID,
+      </if>
+      <if test="createtime != null" >
+        CREATETIME,
+      </if>
+      <if test="starttime != null" >
+        STARTTIME,
+      </if>
+      <if test="endtime != null" >
+        ENDTIME,
+      </if>
+      <if test="orderid != null" >
+        ORDERID,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="equipmentid != null" >
+        #{equipmentid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="starttime != null" >
+        #{starttime,jdbcType=DATE},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=DATE},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.BusinessExample" resultType="java.lang.Integer" >
+    select count(*) from business
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update business
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null" >
+        TYPE = #{record.type,jdbcType=CHAR},
+      </if>
+      <if test="record.equipmentid != null" >
+        EQUIPMENTID = #{record.equipmentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        CREATETIME = #{record.createtime,jdbcType=DATE},
+      </if>
+      <if test="record.starttime != null" >
+        STARTTIME = #{record.starttime,jdbcType=DATE},
+      </if>
+      <if test="record.endtime != null" >
+        ENDTIME = #{record.endtime,jdbcType=DATE},
+      </if>
+      <if test="record.orderid != null" >
+        ORDERID = #{record.orderid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update business
+    set ID = #{record.id,jdbcType=INTEGER},
+      TYPE = #{record.type,jdbcType=CHAR},
+      EQUIPMENTID = #{record.equipmentid,jdbcType=INTEGER},
+      CREATETIME = #{record.createtime,jdbcType=DATE},
+      STARTTIME = #{record.starttime,jdbcType=DATE},
+      ENDTIME = #{record.endtime,jdbcType=DATE},
+      ORDERID = #{record.orderid,jdbcType=INTEGER},
+      STATE = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Business" >
+    update business
+    <set >
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=CHAR},
+      </if>
+      <if test="equipmentid != null" >
+        EQUIPMENTID = #{equipmentid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        CREATETIME = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="starttime != null" >
+        STARTTIME = #{starttime,jdbcType=DATE},
+      </if>
+      <if test="endtime != null" >
+        ENDTIME = #{endtime,jdbcType=DATE},
+      </if>
+      <if test="orderid != null" >
+        ORDERID = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Business" >
+    update business
+    set TYPE = #{type,jdbcType=CHAR},
+      EQUIPMENTID = #{equipmentid,jdbcType=INTEGER},
+      CREATETIME = #{createtime,jdbcType=DATE},
+      STARTTIME = #{starttime,jdbcType=DATE},
+      ENDTIME = #{endtime,jdbcType=DATE},
+      ORDERID = #{orderid,jdbcType=INTEGER},
+      STATE = #{state,jdbcType=CHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

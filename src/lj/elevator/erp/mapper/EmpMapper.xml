@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.EmpMapper" >
+
+
+
+
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Emp" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="GENDER" property="gender" jdbcType="CHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="TELE" property="tele" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="DATE" />
+    <result column="DEPID" property="depid" jdbcType="INTEGER" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    
+    <association property="dep" javaType="lj.elevator.erp.pojo.Dep">
+    	<id column="DEPID" property="id" jdbcType="INTEGER" />
+    	<result column="DName" property="name" jdbcType="VARCHAR" />
+   		<result column="DTELE" property="tele" jdbcType="VARCHAR" />
+    </association>
+    
+    <association property="role" javaType="lj.elevator.erp.pojo.Role">
+    	<id column="RID" property="id" jdbcType="INTEGER" />
+    	<result column="RNAME" property="name" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  
+  
+<!--   表间关系配置 -->
+   <!--  <resultMap id="All_ResultMap" type="lj.elevator.erp.pojo.Emp" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="GENDER" property="gender" jdbcType="CHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="TELE" property="tele" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="DATE" />
+    <result column="DEPID" property="depid" jdbcType="INTEGER" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    
+    <association property="dep" javaType="lj.elevator.erp.pojo.dep">
+    	<id column="ID" property="DEPID" jdbcType="INTEGER" />
+    	<result column="NAME" property="name" jdbcType="VARCHAR" />
+   		<result column="TELE" property="tele" jdbcType="VARCHAR" />
+    </association>
+  </resultMap> -->
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="select" resultMap="BaseResultMap">
+  
+  
+  SELECT
+  `ID`,
+  `USERNAME`,
+  `PWD`,
+  `NAME`,
+  `GENDER`,
+  `EMAIL`,
+  `TELE`,
+  `ADDRESS`,
+  `BIRTHDAY`,
+  `DEPID`,
+  `STATE`
+FROM `emp`
+  
+  
+  
+  </select>
+  
+  
+  <update id="deleteById" parameterType="int">
+  
+  	UPDATE `emp`
+SET 
+  `STATE` = 1
+WHERE `ID` = #{id};
+  
+  
+  
+  
+  </update>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByUtil"  parameterType="lj.elevator.erp.utils.ConditionUtil"  resultMap="BaseResultMap">
+SELECT
+  e.`ID`,
+  e.`USERNAME`,
+  e.`PWD`,
+  e.`NAME`,
+  e.`GENDER`,
+  e.`EMAIL`,
+  e.`TELE`,
+  e.`ADDRESS`,
+  e.`BIRTHDAY`,
+  e.`DEPID`,
+  e.`STATE`,
+  d.`NAME` DName ,
+  d.`TELE` DTELE,
+  r.`ID` RID ,
+  r.`NAME` RName
+FROM `emp` e 
+LEFT JOIN `dep` d
+ON e.`DEPID` = d.`ID`
+LEFT JOIN  `emp_role` er  
+ON  e.`ID` = er.`EMPID`
+LEFT JOIN `role` r
+ON er.`ROLEID` = r.`ID`
+<where>
+	<if test="conditionS.size() != 0" >
+		e.`NAME` = #{conditionS[0]} or
+		r.`NAME` = #{conditionS[0]} or
+		d.`NAME` = #{conditionS[0]} 
+	</if>	
+	and e.`STATE` = 0
+</where>
+ORDER BY `id`
+LIMIT #{start},#{size}
+
+
+  </select>
+  
+  <select id="countByUtil" parameterType="list" resultType="int">
+  	SELECT
+  	COUNT(*) NUM
+	FROM `emp` e 
+	LEFT JOIN `dep` d
+	ON e.`DEPID` = d.`ID`
+	LEFT JOIN  `emp_role` er  
+	ON  e.`ID` = er.`EMPID`
+	LEFT JOIN `role` r
+	ON er.`ROLEID` = r.`ID`
+	<where>
+	<foreach collection="list" item="target" >
+		e.`NAME` = #{target} or
+		r.`NAME` = #{target} or
+		d.`NAME` = #{target} 
+    </foreach>	
+    and e.`STATE` = 0
+	</where>
+  </select>
+  
+  
+  
+<!--   
+  selectByExample
+  
+  deleteByPrimaryKey
+  deleteByExample
+  deleteByExample
+  
+  insert
+  insertSelective
+  
+  countByExample
+  
+  updateByExampleSelective
+  updateByExample
+  updateByPrimaryKeySelective
+  updateByPrimaryKey -->
+  
+  
+   <!--  条件选择的片段（or）
+   		1. 遍历oredCriteria集合，得criteria对象
+   		2. 对每个criteria对象中的每个criterion对象进行遍历
+   		3. 对criterion对象中的属性进行判空，选择
+   		 -->
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, USERNAME, PWD, NAME, GENDER, EMAIL, TELE, ADDRESS, BIRTHDAY, DEPID, STATE
+  </sql>
+  
+  
+  <!-- distinct：sql中表示去掉重复的行 -->
+  <!-- 有/无条件选择  实力查询 -->
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.EmpExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <!-- 主键select -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from emp
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 主键删除字段 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from emp
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 例子删除字段 -->
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.EmpExample" >
+    delete from emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  
+  <!-- 全字段数据插入 -->
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Emp" >
+    insert into emp (ID, USERNAME, PWD, 
+      NAME, GENDER, EMAIL, TELE, 
+      ADDRESS, BIRTHDAY, DEPID, 
+      STATE)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, #{tele,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{depid,jdbcType=INTEGER}, 
+      #{state,jdbcType=CHAR})
+  </insert>
+  
+  <!-- 部分字段数据插入 -->
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Emp"  useGeneratedKeys="true" keyProperty="id">
+    insert into emp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="username != null" >
+        USERNAME,
+      </if>
+      <if test="pwd != null" >
+        PWD,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="gender != null" >
+        GENDER,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="tele != null" >
+        TELE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY,
+      </if>
+      <if test="depid != null" >
+        DEPID,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="tele != null" >
+        #{tele,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="depid != null" >
+        #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  
+  <!-- 实例计数 -->
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.EmpExample" resultType="java.lang.Integer" >
+    select count(*) from emp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
+  <!-- 部分字段数据更新 -->
+  <update id="updateByExampleSelective" parameterType="map" >
+    update emp
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        USERNAME = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null" >
+        PWD = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gender != null" >
+        GENDER = #{record.gender,jdbcType=CHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tele != null" >
+        TELE = #{record.tele,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        BIRTHDAY = #{record.birthday,jdbcType=DATE},
+      </if>
+      <if test="record.depid != null" >
+        DEPID = #{record.depid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  
+  
+  <!-- 通过实例更新 -->
+  <update id="updateByExample" parameterType="map" >
+    update emp
+    set ID = #{record.id,jdbcType=INTEGER},
+      USERNAME = #{record.username,jdbcType=VARCHAR},
+      PWD = #{record.pwd,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      GENDER = #{record.gender,jdbcType=CHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      TELE = #{record.tele,jdbcType=VARCHAR},
+      ADDRESS = #{record.address,jdbcType=VARCHAR},
+      BIRTHDAY = #{record.birthday,jdbcType=DATE},
+      DEPID = #{record.depid,jdbcType=INTEGER},
+      STATE = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  
+  <!-- 主键选择部分字段更新 -->
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Emp" >
+    update emp
+    <set >
+      <if test="username != null" >
+        USERNAME = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        GENDER = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="tele != null" >
+        TELE = #{tele,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="depid != null" >
+        DEPID = #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 主键选择全字段更新 -->
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Emp" >
+    update emp
+    set USERNAME = #{username,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      GENDER = #{gender,jdbcType=CHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      TELE = #{tele,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      BIRTHDAY = #{birthday,jdbcType=DATE},
+      DEPID = #{depid,jdbcType=INTEGER},
+      STATE = #{state,jdbcType=CHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

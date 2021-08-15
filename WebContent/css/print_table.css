@@ -1,0 +1,204 @@
+@charset "utf-8";
+/* CSS Reset */
+html{color:#000;background: #fff;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
+a{color:#757575;text-decoration:none}a:hover{color:#fc9635;;text-decoration:none}
+/* Base CSS */
+
+/* iconfont css */
+@font-face {
+    font-family: 'iconfont';
+    src: url('fonts/iconfont.eot'); /* IE9*/
+    src: url('fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('fonts/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('fonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('fonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+    font-weight: normal;
+    font-style: normal;
+}
+.icon {
+    font-family: 'iconfont';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale
+}
+/* END iconfont css */
+
+.btn {
+    font-size: 12px;
+    display: inline-block;
+    font-weight: normal;
+    padding: 0 20px;
+    height: 32px;
+    line-height: 30px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, "Microsoft YaHei";
+}
+.clear{
+    clear: both;
+}
+.operate{
+    width: 84px;
+    margin: 10px auto;
+}
+.w80{
+    width: 80px!important;
+}
+.w150{
+    width: 150px!important;
+}
+.w45{
+    width: 45px!important;
+}
+.w65{
+    width: 65px!important;
+}
+.w75{
+    width: 75px!important;
+}
+
+.w230{
+    width: 230px!important;
+}
+.w245{
+    width: 245px!important;
+}
+.w270{
+    width: 270px!important;
+}
+.w170{
+    width: 170px!important;
+}
+.w100{
+    width: 100px!important;
+}
+body{
+    font-family: "SimSun", "NSimSun", "FangSong", "Microsoft YaHei";
+    font-size: 14px;
+}
+.quotation_table table{
+    border:1px solid #000;
+    width: 1000px;
+    margin-top: 4px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.quotation_table thead tr{
+    width: 1000px;
+}
+.quotation_table .quotation_img{
+    width: 960px;
+    height: 112px;
+    margin:4px auto;
+}
+.quotation_table .quotation_img img{
+    width: 960px;
+    height: 112px;
+}
+.quotation_table thead h3{
+    font-weight: 600;
+    text-align: center;
+    font-size: 22px;
+    padding: 4px 0;
+}
+.quotation_table thead th,.quotation_table tbody th,.quotation_table tbody td{
+    border-bottom:1px solid #000;
+}
+.quotation_table thead p{
+    font-size: 22px;
+}
+.quotation_table tbody th{
+    font-size: 20px;
+    font-weight: 800;
+}
+.quotation_table tbody th,.quotation_table tbody td{
+    height: 40px;
+    border-right: 1px solid #000;
+}
+.quotation_form_tr th{
+    text-align: center;
+}
+.quotation_form_tr td{
+    height: 40px;
+    text-align: center;
+    overflow: hidden;
+}
+.quotation_form_tr th,.quotation_form_tr td{
+    border-right: 1px solid #000;
+}
+.quotation_table_tips td{
+    padding: 10px 0;
+}
+
+.delivery_notice_table{
+    width: 680px;
+    margin-top: 4px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.delivery_notice_header{
+    width: 540px;
+    margin: 5px auto;
+}
+.delivery_notice_header img{
+    float: left;
+}
+.delivery_notice_title{
+    float: left;
+    padding: 0 15px;
+    font-weight: bold;
+    text-align: center;
+}
+.delivery_notice_title h3{
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 50px;
+}
+.delivery_notice_title p{
+    height: 30px;
+    line-height: 30px;
+    font-size: 22px;
+}
+.delivery_notice_no {
+    font-size: 14px;
+    padding: 65px 0 0 0;
+}
+.delivery_notice_info table,.delivery_notice_con table,.delivery_notice_footer table{
+    width: 680px;
+}
+.delivery_notice_info table tr{
+    height: 16px;
+    line-height: 16px;
+    font-weight: bold;
+    font-size: 12px;
+}
+.delivery_notice_con table{
+    border: 1px solid #000;
+}
+.delivery_notice_con table th,.delivery_notice_con table td{
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #000;
+    height: 18px;
+    line-height: 18px;
+}
+.delivery_notice_con table td{
+    font-size: 12px;
+}
+.delivery_notice_con .total_tr td{
+    text-align: left;
+}
+.delivery_notice_footer td{
+    font-size: 10px;
+    height: 20px;
+    line-height: 20px;
+}

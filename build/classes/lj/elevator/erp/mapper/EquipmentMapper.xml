@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.EquipmentMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Equipment" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="NUM" property="num" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="INTEGER" />
+    <result column="MODEL" property="model" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="LOAD" property="load" jdbcType="VARCHAR" />
+    <result column="SPEED" property="speed" jdbcType="DECIMAL" />
+    <result column="LAYERANDSTATION" property="layerandstation" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="CUSTOMERID" property="customerid" jdbcType="INTEGER" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    <result column="SCRAPDATE" property="scrapdate" jdbcType="DATE" />
+    <result column="INSTALLTIME" property="installtime" jdbcType="DATE" />
+    <result column="OPERTIME" property="opertime" jdbcType="DATE" />
+    <result column="SECEXAMTIME" property="secexamtime" jdbcType="DATE" />
+    <result column="ANNUALEXAMTIME" property="annualexamtime" jdbcType="DATE" />
+    
+    
+    
+    <association property="customer" javaType="lj.elevator.erp.pojo.Customer">
+    	<id column="CUSTOMERID" property="id" jdbcType="INTEGER" />
+    	<result column="CNAME" property="name" jdbcType="VARCHAR" />
+    	<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+    	<result column="TELE" property="tele" jdbcType="VARCHAR" />
+    	<result column="CADDRESS" property="address" jdbcType="VARCHAR" />
+    </association>  
+    
+    
+    
+    
+    
+    
+    
+    
+  </resultMap>
+  
+  
+  
+  
+ <select id="select" resultMap="BaseResultMap">
+ 
+ 
+ SELECT
+  `ID`,
+  `NUM`,
+  `CODE`,
+  `MODEL`,
+  `NAME`,
+  `LOAD`,
+  `SPEED`,
+  `LAYERANDSTATION`,
+  `ADDRESS`,
+  `CUSTOMERID`,
+  `STATE`,
+  `SCRAPDATE`,
+  `INSTALLTIME`,
+  `OPERTIME`,
+  `SECEXAMTIME`,
+  `ANNUALEXAMTIME`
+FROM `equipment`
+ 
+ 
+ 
+ 
+ 
+ 
+ </select> 
+  
+  
+  
+  <select id="selectByUtil" parameterType="lj.elevator.erp.utils.ConditionUtil"  resultMap="BaseResultMap">
+  
+  
+  SELECT
+  e.`ID`,
+  e.`NUM`,
+  e.`CODE`,
+  e.`MODEL`,
+  e.`NAME`,
+  e.`LOAD`,
+  e.`SPEED`,
+  e.`LAYERANDSTATION`,
+  e.`ADDRESS`,
+  e.`CUSTOMERID`,
+  e.`STATE`,
+  e.`SCRAPDATE`,
+  e.`INSTALLTIME`,
+  e.`OPERTIME`,
+  e.`SECEXAMTIME`,
+  e.`ANNUALEXAMTIME`,
+  
+  c.`NAME` CNAME,
+  c.`CONTACT`,
+  c.`TELE`,
+  c.`ADDRESS` CADDRESS
+  
+FROM `equipment` e
+LEFT JOIN `customer` c
+ON e.`CUSTOMERID` = c.`ID`
+<where>
+<if test="conditionS.size() != 0" >
+	
+		<if test="conditionS[0] != null">
+			AND e.`NUM` = #{conditionS[0]} 
+		
+		</if>
+		
+		<if test="conditionS[1] != null">
+			AND e.`CODE` = #{conditionS[1]}  
+		
+		</if>
+		
+		<if test="conditionS[2] != null">
+			AND e.`NAME` LIKE '%${conditionS[2]}%'  
+		
+		</if>
+
+		<if test="conditionS[3] != null">
+			AND c.`NAME` LIKE '%${conditionS[3]}%'  
+		
+		</if>
+		
+		
+		<if test="conditionS[4] != null">
+			AND e.`STATE` LIKE '%${conditionS[4]}%'    
+		
+		</if>
+		
+
+	</if>	
+
+</where>
+order by  e.`STATE`  
+LIMIT #{start},#{size}    
+  
+  
+  </select>
+  
+  
+  
+  
+  
+  
+<select id="countByUtil" parameterType="list" resultType="int">
+
+  SELECT
+
+count(*) NUM  
+FROM `equipment` e
+LEFT JOIN `customer` c
+ON e.`CUSTOMERID` = c.`ID`
+<where>
+	<if test="list.size() != 0" >
+		<if test="list.get(0) != null">
+			AND e.`NUM` LIKE '${list.get(0)}'
+			
+		</if>
+		
+		<if test="list.get(1) != null">
+			AND e.`CODE` like '${list.get(1)}' 
+		
+		</if>
+		
+		
+		<if test="list.get(2) != null">
+			AND e.`NAME` like '%${list.get(2)}%' 
+		
+		</if>
+		
+		<if test="list.get(3) != null">
+			AND c.`NAME` like '%${list.get(3)}%' 
+		
+		</if>
+
+
+		<if test="list.get(4) != null">
+			AND e.`STATE` like '%${list.get(4)}%' 
+		
+		</if>
+		
+
+	</if>	
+</where>
+
+</select>  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NUM, `CODE`, MODEL, NAME, `LOAD`, SPEED, LAYERANDSTATION, ADDRESS, CUSTOMERID, STATE, 
+    SCRAPDATE, INSTALLTIME, OPERTIME, SECEXAMTIME, ANNUALEXAMTIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.EquipmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipment
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.EquipmentExample" >
+    delete from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Equipment" >
+    insert into equipment (ID, NUM, `CODE`, 
+      MODEL, NAME, `LOAD`, 
+      SPEED, LAYERANDSTATION, ADDRESS, 
+      CUSTOMERID, STATE, SCRAPDATE, 
+      INSTALLTIME, OPERTIME, SECEXAMTIME, 
+      ANNUALEXAMTIME)
+    values (#{id,jdbcType=INTEGER}, #{num,jdbcType=VARCHAR}, #{code,jdbcType=INTEGER}, 
+      #{model,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{load,jdbcType=VARCHAR}, 
+      #{speed,jdbcType=DECIMAL}, #{layerandstation,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{customerid,jdbcType=INTEGER}, #{state,jdbcType=CHAR}, #{scrapdate,jdbcType=DATE}, 
+      #{installtime,jdbcType=DATE}, #{opertime,jdbcType=DATE}, #{secexamtime,jdbcType=DATE}, 
+      #{annualexamtime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Equipment" >
+    insert into equipment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+      <if test="code != null" >
+        `CODE`,
+      </if>
+      <if test="model != null" >
+        MODEL,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="load != null" >
+        `LOAD`,
+      </if>
+      <if test="speed != null" >
+        SPEED,
+      </if>
+      <if test="layerandstation != null" >
+        LAYERANDSTATION,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="customerid != null" >
+        CUSTOMERID,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="scrapdate != null" >
+        SCRAPDATE,
+      </if>
+      <if test="installtime != null" >
+        INSTALLTIME,
+      </if>
+      <if test="opertime != null" >
+        OPERTIME,
+      </if>
+      <if test="secexamtime != null" >
+        SECEXAMTIME,
+      </if>
+      <if test="annualexamtime != null" >
+        ANNUALEXAMTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=INTEGER},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="load != null" >
+        #{load,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        #{speed,jdbcType=DECIMAL},
+      </if>
+      <if test="layerandstation != null" >
+        #{layerandstation,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="customerid != null" >
+        #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+      <if test="scrapdate != null" >
+        #{scrapdate,jdbcType=DATE},
+      </if>
+      <if test="installtime != null" >
+        #{installtime,jdbcType=DATE},
+      </if>
+      <if test="opertime != null" >
+        #{opertime,jdbcType=DATE},
+      </if>
+      <if test="secexamtime != null" >
+        #{secexamtime,jdbcType=DATE},
+      </if>
+      <if test="annualexamtime != null" >
+        #{annualexamtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.EquipmentExample" resultType="java.lang.Integer" >
+    select count(*) from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update equipment
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.num != null" >
+        NUM = #{record.num,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null" >
+        `CODE` = #{record.code,jdbcType=INTEGER},
+      </if>
+      <if test="record.model != null" >
+        MODEL = #{record.model,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.load != null" >
+        `LOAD` = #{record.load,jdbcType=VARCHAR},
+      </if>
+      <if test="record.speed != null" >
+        SPEED = #{record.speed,jdbcType=DECIMAL},
+      </if>
+      <if test="record.layerandstation != null" >
+        LAYERANDSTATION = #{record.layerandstation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerid != null" >
+        CUSTOMERID = #{record.customerid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+      <if test="record.scrapdate != null" >
+        SCRAPDATE = #{record.scrapdate,jdbcType=DATE},
+      </if>
+      <if test="record.installtime != null" >
+        INSTALLTIME = #{record.installtime,jdbcType=DATE},
+      </if>
+      <if test="record.opertime != null" >
+        OPERTIME = #{record.opertime,jdbcType=DATE},
+      </if>
+      <if test="record.secexamtime != null" >
+        SECEXAMTIME = #{record.secexamtime,jdbcType=DATE},
+      </if>
+      <if test="record.annualexamtime != null" >
+        ANNUALEXAMTIME = #{record.annualexamtime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update equipment
+    set ID = #{record.id,jdbcType=INTEGER},
+      NUM = #{record.num,jdbcType=VARCHAR},
+      `CODE` = #{record.code,jdbcType=INTEGER},
+      MODEL = #{record.model,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      `LOAD` = #{record.load,jdbcType=VARCHAR},
+      SPEED = #{record.speed,jdbcType=DECIMAL},
+      LAYERANDSTATION = #{record.layerandstation,jdbcType=VARCHAR},
+      ADDRESS = #{record.address,jdbcType=VARCHAR},
+      CUSTOMERID = #{record.customerid,jdbcType=INTEGER},
+      STATE = #{record.state,jdbcType=CHAR},
+      SCRAPDATE = #{record.scrapdate,jdbcType=DATE},
+      INSTALLTIME = #{record.installtime,jdbcType=DATE},
+      OPERTIME = #{record.opertime,jdbcType=DATE},
+      SECEXAMTIME = #{record.secexamtime,jdbcType=DATE},
+      ANNUALEXAMTIME = #{record.annualexamtime,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Equipment" >
+    update equipment
+    <set >
+      <if test="num != null" >
+        NUM = #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        `CODE` = #{code,jdbcType=INTEGER},
+      </if>
+      <if test="model != null" >
+        MODEL = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="load != null" >
+       `LOAD` = #{load,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        SPEED = #{speed,jdbcType=DECIMAL},
+      </if>
+      <if test="layerandstation != null" >
+        LAYERANDSTATION = #{layerandstation,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="customerid != null" >
+        CUSTOMERID = #{customerid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+      <if test="scrapdate != null" >
+        SCRAPDATE = #{scrapdate,jdbcType=DATE},
+      </if>
+      <if test="installtime != null" >
+        INSTALLTIME = #{installtime,jdbcType=DATE},
+      </if>
+      <if test="opertime != null" >
+        OPERTIME = #{opertime,jdbcType=DATE},
+      </if>
+      <if test="secexamtime != null" >
+        SECEXAMTIME = #{secexamtime,jdbcType=DATE},
+      </if>
+      <if test="annualexamtime != null" >
+        ANNUALEXAMTIME = #{annualexamtime,jdbcType=DATE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Equipment" >
+    update equipment
+    set NUM = #{num,jdbcType=VARCHAR},
+      `CODE` = #{code,jdbcType=INTEGER},
+      MODEL = #{model,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      `LOAD` = #{load,jdbcType=VARCHAR},
+      SPEED = #{speed,jdbcType=DECIMAL},
+      LAYERANDSTATION = #{layerandstation,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      CUSTOMERID = #{customerid,jdbcType=INTEGER},
+      STATE = #{state,jdbcType=CHAR},
+      SCRAPDATE = #{scrapdate,jdbcType=DATE},
+      INSTALLTIME = #{installtime,jdbcType=DATE},
+      OPERTIME = #{opertime,jdbcType=DATE},
+      SECEXAMTIME = #{secexamtime,jdbcType=DATE},
+      ANNUALEXAMTIME = #{annualexamtime,jdbcType=DATE}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

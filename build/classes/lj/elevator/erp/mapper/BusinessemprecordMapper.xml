@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.BusinessemprecordMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Businessemprecord" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="EMPID" property="empid" jdbcType="INTEGER" />
+    <result column="BUSINESSID" property="businessid" jdbcType="INTEGER" />
+    <result column="WORKTYPE" property="worktype" jdbcType="CHAR" />
+    
+    <association property="emp" javaType="lj.elevator.erp.pojo.Emp">
+    	<id column="EMPID" property="id" jdbcType="INTEGER" />
+    	<result column="NAME" property="name" jdbcType="VARCHAR" />
+    	<result column="GENDER" property="gender" jdbcType="CHAR" />
+    	<result column="TELE" property="tele" jdbcType="VARCHAR" />
+    	<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    	<result column="DEPID" property="depid" jdbcType="INTEGER" />
+    	
+    	    <association property="dep" javaType="lj.elevator.erp.pojo.Dep">
+    			<id column="DEPID" property="id" jdbcType="INTEGER" />
+    			<result column="DName" property="name" jdbcType="VARCHAR" />
+    		</association>
+    
+    		<association property="role" javaType="lj.elevator.erp.pojo.Role">
+    			<id column="RID" property="id" jdbcType="INTEGER" />
+    			<result column="RNAME" property="name" jdbcType="VARCHAR" />
+    		</association>
+    	
+    </association>
+    	
+    
+  </resultMap>
+  
+  
+  
+  
+  <select id="selectByBusinessId" resultMap="BaseResultMap" parameterType="int">
+  
+  SELECT
+  b.`ID`,
+  b.`EMPID`,
+  b.`BUSINESSID`,
+  b.`WORKTYPE`,
+	
+  e.`NAME`,
+  e.`GENDER`,
+  e.`TELE`,
+  e.`EMAIL`,
+  e.`DEPID`,
+  
+  d.`NAME` DName ,
+  r.`ID` RID ,
+  r.`NAME` RName
+FROM `businessemprecord` b
+LEFT JOIN `emp` e
+ON b.`EMPID` = e.`ID`
+LEFT JOIN `dep` d
+ON e.`DEPID` = d.`ID`
+LEFT JOIN  `emp_role` er  
+ON  e.`ID` = er.`EMPID`
+LEFT JOIN `role` r
+ON er.`ROLEID` = r.`ID`
+<where>
+AND  b.`ID` = #{bid}
+
+</where>
+  
+  
+  
+  
+  
+  </select>
+  <select id="selectByEmpId" resultMap="BaseResultMap" parameterType="int">
+  
+  SELECT
+  b.`ID`,
+  b.`EMPID`,
+  b.`BUSINESSID`,
+  b.`WORKTYPE`,
+	
+  e.`NAME`,
+  e.`GENDER`,
+  e.`TELE`,
+  e.`EMAIL`,
+  e.`DEPID`,
+  
+  d.`NAME` DName ,
+  r.`ID` RID ,
+  r.`NAME` RName
+FROM `businessemprecord` b
+LEFT JOIN `emp` e
+ON b.`EMPID` = e.`ID`
+LEFT JOIN `dep` d
+ON e.`DEPID` = d.`ID`
+LEFT JOIN  `emp_role` er  
+ON  e.`ID` = er.`EMPID`
+LEFT JOIN `role` r
+ON er.`ROLEID` = r.`ID`
+<where>
+AND  e.`ID` = #{eid}
+
+</where>
+  
+  
+  
+  
+  
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, EMPID, BUSINESSID, WORKTYPE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.BusinessemprecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from businessemprecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.BusinessemprecordExample" >
+    delete from businessemprecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Businessemprecord" >
+    insert into businessemprecord (ID, EMPID, BUSINESSID, 
+      WORKTYPE)
+    values (#{id,jdbcType=INTEGER}, #{empid,jdbcType=INTEGER}, #{businessid,jdbcType=INTEGER}, 
+      #{worktype,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Businessemprecord" >
+    insert into businessemprecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="empid != null" >
+        EMPID,
+      </if>
+      <if test="businessid != null" >
+        BUSINESSID,
+      </if>
+      <if test="worktype != null" >
+        WORKTYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=INTEGER},
+      </if>
+      <if test="businessid != null" >
+        #{businessid,jdbcType=INTEGER},
+      </if>
+      <if test="worktype != null" >
+        #{worktype,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.BusinessemprecordExample" resultType="java.lang.Integer" >
+    select count(*) from businessemprecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update businessemprecord
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.empid != null" >
+        EMPID = #{record.empid,jdbcType=INTEGER},
+      </if>
+      <if test="record.businessid != null" >
+        BUSINESSID = #{record.businessid,jdbcType=INTEGER},
+      </if>
+      <if test="record.worktype != null" >
+        WORKTYPE = #{record.worktype,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update businessemprecord
+    set ID = #{record.id,jdbcType=INTEGER},
+      EMPID = #{record.empid,jdbcType=INTEGER},
+      BUSINESSID = #{record.businessid,jdbcType=INTEGER},
+      WORKTYPE = #{record.worktype,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

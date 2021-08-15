@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.DictionaryMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Dictionary" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TYPECODE" property="typecode" jdbcType="VARCHAR" />
+    <result column="TYPENAME" property="typename" jdbcType="VARCHAR" />
+    <result column="VALUEID" property="valueid" jdbcType="INTEGER" />
+    <result column="VALUENAME" property="valuename" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<select id="select" resultMap="BaseResultMap">
+
+SELECT
+  `ID`,
+  `TYPECODE`,
+  `TYPENAME`,
+  `VALUEID`,
+  `VALUENAME`
+FROM `dictionary`
+
+
+</select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TYPECODE, TYPENAME, VALUEID, VALUENAME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.DictionaryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dictionary
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.DictionaryExample" >
+    delete from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Dictionary" >
+    insert into dictionary (ID, TYPECODE, TYPENAME, 
+      VALUEID, VALUENAME)
+    values (#{id,jdbcType=INTEGER}, #{typecode,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, 
+      #{valueid,jdbcType=INTEGER}, #{valuename,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Dictionary" >
+    insert into dictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="typecode != null" >
+        TYPECODE,
+      </if>
+      <if test="typename != null" >
+        TYPENAME,
+      </if>
+      <if test="valueid != null" >
+        VALUEID,
+      </if>
+      <if test="valuename != null" >
+        VALUENAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typecode != null" >
+        #{typecode,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="valueid != null" >
+        #{valueid,jdbcType=INTEGER},
+      </if>
+      <if test="valuename != null" >
+        #{valuename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.DictionaryExample" resultType="java.lang.Integer" >
+    select count(*) from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update dictionary
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.typecode != null" >
+        TYPECODE = #{record.typecode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.typename != null" >
+        TYPENAME = #{record.typename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.valueid != null" >
+        VALUEID = #{record.valueid,jdbcType=INTEGER},
+      </if>
+      <if test="record.valuename != null" >
+        VALUENAME = #{record.valuename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update dictionary
+    set ID = #{record.id,jdbcType=INTEGER},
+      TYPECODE = #{record.typecode,jdbcType=VARCHAR},
+      TYPENAME = #{record.typename,jdbcType=VARCHAR},
+      VALUEID = #{record.valueid,jdbcType=INTEGER},
+      VALUENAME = #{record.valuename,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Dictionary" >
+    update dictionary
+    <set >
+      <if test="typecode != null" >
+        TYPECODE = #{typecode,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        TYPENAME = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="valueid != null" >
+        VALUEID = #{valueid,jdbcType=INTEGER},
+      </if>
+      <if test="valuename != null" >
+        VALUENAME = #{valuename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Dictionary" >
+    update dictionary
+    set TYPECODE = #{typecode,jdbcType=VARCHAR},
+      TYPENAME = #{typename,jdbcType=VARCHAR},
+      VALUEID = #{valueid,jdbcType=INTEGER},
+      VALUENAME = #{valuename,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

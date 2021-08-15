@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  
+  
+  
+  <mapper namespace="lj.elevator.erp.mapper.StoredetailMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Storedetail" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="STOREID" property="storeid" jdbcType="INTEGER" />
+    <result column="GOODSID" property="goodsid" jdbcType="INTEGER" />
+    <result column="SupplierID" property="supplierid" jdbcType="INTEGER" />
+    <result column="TOTALNUM" property="totalnum" jdbcType="INTEGER" />
+    
+    <association property="goods" javaType="lj.elevator.erp.pojo.Goods">
+    	<id column="GOODSID" property="id" jdbcType="INTEGER" />
+    	<result column="MODEL" property="model" jdbcType="VARCHAR" />
+    	<result column="GOODSNAME" property="name" jdbcType="VARCHAR" />
+    	<result column="SPECS" property="specs" jdbcType="VARCHAR" />
+    	<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+  		<result column="ALERTNUM" property="alertnum" jdbcType="INTEGER" />
+  		
+        <association property="goodstype" javaType="lj.elevator.erp.pojo.Goodstype">
+    	 	<result column="GTNAME" property="name" jdbcType="VARCHAR" />
+    	</association>
+    </association>
+    
+    
+    <association property="supplier" javaType="lj.elevator.erp.pojo.Supplier">
+    	 <id column="SupplierID" property="id" jdbcType="INTEGER" />
+    	<result column="SUNAME" property="name" jdbcType="VARCHAR" />
+    	<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+   	 	<result column="TELE" property="tele" jdbcType="VARCHAR" />
+    	<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    	<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    	
+    </association>
+    
+    
+    <association property="store" javaType="lj.elevator.erp.pojo.Store">
+    	 <id column="STOREID" property="id" jdbcType="INTEGER" />
+    	 <result column="STNAME" property="name" jdbcType="VARCHAR" />
+    </association>
+    
+
+    
+    
+    
+  </resultMap>
+  
+  
+<select id="getStoreAlertList" resultMap="BaseResultMap">
+
+SELECT
+  s.`ID`,
+  s.`STOREID`,
+  s.`GOODSID`,
+  s.`SupplierID`,
+  s.`TOTALNUM`,
+  
+  g.`MODEL`,
+  g.`NAME` GOODSNAME,
+  g.`SPECS`,
+  g.`UNIT`,
+  g.`ALERTNUM`,
+  
+  su.`NAME` SUNAME,
+  su.`CONTACT`,
+  su.`TELE`,
+  su.`EMAIL`,
+  su.`ADDRESS`,
+  
+  st.`NAME` STNAME,
+  
+  gt.`NAME` GTNAME
+  
+FROM `storedetail` s
+LEFT JOIN goods g
+ON s.`GOODSID` = g.`ID`
+LEFT JOIN supplier su
+ON s.`SupplierID` = su.`ID`
+LEFT JOIN store st
+ON s.`STOREID` =st.`ID`
+LEFT JOIN goodstype gt
+ON gt.`STOREID` = s.`STOREID`
+where 
+g.`ALERTNUM` > s.`TOTALNUM`  
+
+
+
+</select>  
+  
+  
+  
+  <select id="selectByUtil" parameterType="lj.elevator.erp.utils.ConditionUtil" resultMap="BaseResultMap">
+  
+  
+  
+  
+SELECT
+  s.`ID`,
+  s.`STOREID`,
+  s.`GOODSID`,
+  s.`SupplierID`,
+  s.`TOTALNUM`,
+  
+  g.`MODEL`,
+  g.`NAME` GOODSNAME,
+  g.`SPECS`,
+  g.`UNIT`,
+  g.`ALERTNUM`,
+  
+  su.`NAME` SUNAME,
+  su.`CONTACT`,
+  su.`TELE`,
+  su.`EMAIL`,
+  su.`ADDRESS`,
+  
+  st.`NAME` STNAME,
+  
+  gt.`NAME` GTNAME
+  
+FROM `storedetail` s
+LEFT JOIN goods g
+ON s.`GOODSID` = g.`ID`
+LEFT JOIN supplier su
+ON s.`SupplierID` = su.`ID`
+LEFT JOIN store st
+ON s.`STOREID` =st.`ID`
+LEFT JOIN goodstype gt
+ON gt.`STOREID` = s.`STOREID`
+<where>
+
+	<if test="conditionS.size() != 0">
+		<if test="conditionS[0] != null">
+			AND st.`NAME` = #{conditionS[0]}
+		
+		</if>
+		
+		<if test="conditionS[1] != null">
+		
+			AND gt.`NAME` = #{conditionS[1]}
+		</if>
+		
+		<if test="conditionS[2] != null">
+		
+			AND su.`NAME` LIKE '%${conditionS[2]}%'
+		</if>
+		
+		<if test="conditionS[3] != null">
+		
+			AND g.`NAME` LIKE '%${conditionS[3]}%'
+		</if>
+		
+		<if test="conditionS[4] != null">
+			AND g.`MODEL` LIKE '%${conditionS[4]}%'
+		
+		</if>
+	
+	</if>
+
+
+</where>
+
+ORDER BY s.`GOODSID`
+LIMIT #{start},#{size}
+  
+  </select>
+  
+  
+  
+  
+  
+  
+  
+
+  <select id="countByUtil" parameterType="list" resultType="int">
+SELECT
+  count(*) NUM
+  
+FROM `storedetail` s
+LEFT JOIN goods g
+ON s.`GOODSID` = g.`ID`
+LEFT JOIN supplier su
+ON s.`SupplierID` = su.`ID`
+LEFT JOIN store st
+ON s.`STOREID` =st.`ID`
+LEFT JOIN goodstype gt
+ON gt.`STOREID` =  s.`STOREID`
+<where>
+	<if test="list.size() != 0" >
+		<if test="list.get(0) != null">
+			AND st.`NAME` LIKE '%${list.get(0)}%'
+		
+		</if>
+		
+		<if test="list.get(1) != null">
+			AND gt.`NAME` like '%${list.get(1)}%' 
+		
+		</if>
+		
+		<if test="list.get(2) != null">
+			AND su.`NAME` like '%${list.get(2)}%' 
+		
+		</if>
+		
+		<if test="list.get(3) != null">
+			AND g.`NAME` like '%${list.get(3)}%' 
+		
+		</if>
+		
+		<if test="list.get(4) != null">
+			AND g.`MODEL` like '%${list.get(4)}%' 
+		
+		</if>
+
+	</if>	
+</where>
+</select>
+  
+  
+ 
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, STOREID, GOODSID, SupplierID, TOTALNUM
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.StoredetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from storedetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from storedetail
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from storedetail
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.StoredetailExample" >
+    delete from storedetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Storedetail" >
+    insert into storedetail (ID, STOREID, GOODSID, 
+      SupplierID, TOTALNUM)
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER}, 
+      #{supplierid,jdbcType=INTEGER}, #{totalnum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Storedetail" >
+    insert into storedetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="storeid != null" >
+        STOREID,
+      </if>
+      <if test="goodsid != null" >
+        GOODSID,
+      </if>
+      <if test="supplierid != null" >
+        SupplierID,
+      </if>
+      <if test="totalnum != null" >
+        TOTALNUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null" >
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="goodsid != null" >
+        #{goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="supplierid != null" >
+        #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="totalnum != null" >
+        #{totalnum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.StoredetailExample" resultType="java.lang.Integer" >
+    select count(*) from storedetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update storedetail
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.storeid != null" >
+        STOREID = #{record.storeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsid != null" >
+        GOODSID = #{record.goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierid != null" >
+        SupplierID = #{record.supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalnum != null" >
+        TOTALNUM = #{record.totalnum,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update storedetail
+    set ID = #{record.id,jdbcType=INTEGER},
+      STOREID = #{record.storeid,jdbcType=INTEGER},
+      GOODSID = #{record.goodsid,jdbcType=INTEGER},
+      SupplierID = #{record.supplierid,jdbcType=INTEGER},
+      TOTALNUM = #{record.totalnum,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Storedetail" >
+    update storedetail
+    <set >
+      <if test="storeid != null" >
+        STOREID = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="goodsid != null" >
+        GOODSID = #{goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="supplierid != null" >
+        SupplierID = #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="totalnum != null" >
+        TOTALNUM = #{totalnum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Storedetail" >
+    update storedetail
+    set STOREID = #{storeid,jdbcType=INTEGER},
+      GOODSID = #{goodsid,jdbcType=INTEGER},
+      SupplierID = #{supplierid,jdbcType=INTEGER},
+      TOTALNUM = #{totalnum,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

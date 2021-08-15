@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Goods" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="MODEL" property="model" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SPECS" property="specs" jdbcType="VARCHAR" />
+    <result column="SUPPLIERID" property="supplierid" jdbcType="INTEGER" />
+    <result column="SUPPLIER" property="supplier" jdbcType="VARCHAR" />
+    <result column="GOODSTYPEID" property="goodstypeid" jdbcType="INTEGER" />
+    <result column="ALERTNUM" property="alertnum" jdbcType="INTEGER" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+  
+    <association property="goodstype" javaType="lj.elevator.erp.pojo.Goodstype">
+    	<id column="GOODSTYPEID" property="id" jdbcType="INTEGER" />
+    	<result column="TName" property="name" jdbcType="VARCHAR" />
+    </association>  
+  
+  
+  </resultMap>
+  
+  
+<select id="selectModelNameBySupplierId" resultType="string" parameterType="java.lang.Integer">
+
+
+SELECT
+  `MODEL`
+
+FROM `goods`
+<where>
+
+     SUPPLIERID = #{supplierid,jdbcType=INTEGER}
+</where>
+ORDER BY `model`
+</select>  
+
+<select id="selectModelName" resultType="string" >
+
+
+SELECT
+  `MODEL`
+
+FROM `goods`
+
+ORDER BY `model`
+</select>  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectName" resultType="string">
+  
+  
+  SELECT
+
+ DISTINCT `NAME`
+
+FROM `goods`
+  
+  
+  
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <delete id="deleteGoodsById" parameterType="int">
+  
+  
+  UPDATE `goods`
+SET 
+  `STATE` = 1
+WHERE `ID` = #{id};
+  
+  
+  
+  
+  
+  </delete>  
+  
+  
+  
+  <select id="selectByUtil"  parameterType="lj.elevator.erp.utils.ConditionUtil"  resultMap="BaseResultMap">
+SELECT
+  g.`ID`,
+  g.`MODEL`,
+  g.`NAME`,
+  g.`SPECS`,
+  g.`SUPPLIERID`,
+  g.`SUPPLIER`,
+  g.`GOODSTYPEID`,
+  g.`ALERTNUM`,
+  g.`NOTE`,
+  g.`STATE`,
+  G.`UNIT`,
+  t.`NAME` TName
+FROM `goods` g
+LEFT JOIN  `goodstype` t
+ON g.`GOODSTYPEID` = t.`ID`
+<where>
+	<if test="conditionS.size() != 0" >
+		<if test="conditionS[0] != null">
+			AND t.`NAME` = #{conditionS[0]} 
+		
+		</if>
+		
+		<if test="conditionS[1] != null">
+			AND g.`SUPPLIER` LIKE '%${conditionS[1]}%' 
+		
+		</if>
+		
+		<if test="conditionS[2] != null">
+			AND g.`NAME` LIKE '%${conditionS[2]}%' 
+		
+		</if>
+
+	</if>	
+	and g.`STATE` = 0
+</where>
+ORDER BY `id`
+LIMIT #{start},#{size}
+</select>
+
+
+
+<select id="countByUtil" parameterType="list" resultType="int">
+  	SELECT
+  count(*) NUM
+FROM `goods` g
+LEFT JOIN  `goodstype` t
+ON g.`GOODSTYPEID` = t.`ID`
+<where>
+	<if test="list.size() != 0" >
+		<if test="list.get(0) != null">
+			AND t.`NAME` LIKE '%${list.get(0)}%'
+		
+		</if>
+		
+		<if test="list.get(1) != null">
+			AND g.`SUPPLIER` like '%${list.get(1)}%' 
+		
+		</if>
+		
+		<if test="list.get(2) != null">
+			AND g.`NAME` like '%${list.get(2)}%' 
+		
+		</if>
+
+	</if>	
+	and g.`STATE` = 0
+</where>
+</select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MODEL, NAME, SPECS, SUPPLIERID, SUPPLIER, GOODSTYPEID, ALERTNUM, NOTE, STATE, 
+    UNIT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.GoodsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from goods
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.GoodsExample" >
+    delete from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Goods" >
+    insert into goods (ID, MODEL, NAME, 
+      SPECS, SUPPLIERID, SUPPLIER, 
+      GOODSTYPEID, ALERTNUM, NOTE, 
+      STATE, UNIT)
+    values (#{id,jdbcType=INTEGER}, #{model,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{specs,jdbcType=VARCHAR}, #{supplierid,jdbcType=INTEGER}, #{supplier,jdbcType=VARCHAR}, 
+      #{goodstypeid,jdbcType=INTEGER}, #{alertnum,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{state,jdbcType=CHAR}, #{unit,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="model != null" >
+        MODEL,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="specs != null" >
+        SPECS,
+      </if>
+      <if test="supplierid != null" >
+        SUPPLIERID,
+      </if>
+      <if test="supplier != null" >
+        SUPPLIER,
+      </if>
+      <if test="goodstypeid != null" >
+        GOODSTYPEID,
+      </if>
+      <if test="alertnum != null" >
+        ALERTNUM,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="specs != null" >
+        #{specs,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierid != null" >
+        #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="supplier != null" >
+        #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="goodstypeid != null" >
+        #{goodstypeid,jdbcType=INTEGER},
+      </if>
+      <if test="alertnum != null" >
+        #{alertnum,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.GoodsExample" resultType="java.lang.Integer" >
+    select count(*) from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update goods
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.model != null" >
+        MODEL = #{record.model,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.specs != null" >
+        SPECS = #{record.specs,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supplierid != null" >
+        SUPPLIERID = #{record.supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplier != null" >
+        SUPPLIER = #{record.supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodstypeid != null" >
+        GOODSTYPEID = #{record.goodstypeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.alertnum != null" >
+        ALERTNUM = #{record.alertnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.note != null" >
+        NOTE = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+      <if test="record.unit != null" >
+        UNIT = #{record.unit,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update goods
+    set ID = #{record.id,jdbcType=INTEGER},
+      MODEL = #{record.model,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      SPECS = #{record.specs,jdbcType=VARCHAR},
+      SUPPLIERID = #{record.supplierid,jdbcType=INTEGER},
+      SUPPLIER = #{record.supplier,jdbcType=VARCHAR},
+      GOODSTYPEID = #{record.goodstypeid,jdbcType=INTEGER},
+      ALERTNUM = #{record.alertnum,jdbcType=INTEGER},
+      NOTE = #{record.note,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=CHAR},
+      UNIT = #{record.unit,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Goods" >
+    update goods
+    <set >
+      <if test="model != null" >
+        MODEL = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="specs != null" >
+        SPECS = #{specs,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierid != null" >
+        SUPPLIERID = #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="supplier != null" >
+        SUPPLIER = #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="goodstypeid != null" >
+        GOODSTYPEID = #{goodstypeid,jdbcType=INTEGER},
+      </if>
+      <if test="alertnum != null" >
+        ALERTNUM = #{alertnum,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+      <if test="unit != null" >
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Goods" >
+    update goods
+    set MODEL = #{model,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      SPECS = #{specs,jdbcType=VARCHAR},
+      SUPPLIERID = #{supplierid,jdbcType=INTEGER},
+      SUPPLIER = #{supplier,jdbcType=VARCHAR},
+      GOODSTYPEID = #{goodstypeid,jdbcType=INTEGER},
+      ALERTNUM = #{alertnum,jdbcType=INTEGER},
+      NOTE = #{note,jdbcType=VARCHAR},
+      STATE = #{state,jdbcType=CHAR},
+      UNIT = #{unit,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

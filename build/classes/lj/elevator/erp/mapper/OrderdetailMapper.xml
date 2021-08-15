@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lj.elevator.erp.mapper.OrderdetailMapper" >
+  <resultMap id="BaseResultMap" type="lj.elevator.erp.pojo.Orderdetail" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GOODSID" property="goodsid" jdbcType="INTEGER" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="INTEGER" />
+    <result column="ENDTIME" property="endtime" jdbcType="DATE" />
+    <result column="STOREKEEPER" property="storekeeper" jdbcType="VARCHAR" />
+    <result column="STOREID" property="storeid" jdbcType="INTEGER" />
+    <result column="ORDERID" property="orderid" jdbcType="INTEGER" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    
+    
+    <association property="goods" javaType="lj.elevator.erp.pojo.Goods">
+    <id column="GOODSID" property="id" jdbcType="INTEGER" />
+    <result column="GMODEL" property="model" jdbcType="VARCHAR" />
+    <result column="GNAME" property="name" jdbcType="VARCHAR" />
+    <result column="GOODSTYPEID" property="goodstypeid" jdbcType="INTEGER" />
+  
+    	<association property="goodstype" javaType="lj.elevator.erp.pojo.Goodstype">
+    		<id column="GOODSTYPEID" property="id" jdbcType="INTEGER" />
+    		<result column="GTName" property="name" jdbcType="VARCHAR" />
+    		<result column="GTSTOREID" property="storeid" jdbcType="INTEGER" />
+    	</association>      	
+    	
+    </association>
+    
+    
+    
+    
+    <association property="store" javaType="lj.elevator.erp.pojo.Store">
+    	<id column="STOREID" property="id" jdbcType="INTEGER" />
+   	 	<result column="SNAME" property="name" jdbcType="VARCHAR" />
+    	<result column="EMPID" property="empid" jdbcType="INTEGER" />
+    	
+    	<association property="emp" javaType="lj.elevator.erp.pojo.Emp">
+    		    <id column="EMPID" property="id" jdbcType="INTEGER" />
+    			<result column="ENAME" property="name" jdbcType="VARCHAR" />
+    	</association>     		
+    		
+    	
+    	
+    </association>     
+    
+    
+    
+  </resultMap>
+  
+  
+  
+  
+<select id="selectOrderdetailByOrderId"  parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+
+SELECT
+  od.`ID`,
+  od.`GOODSID`,
+  od.`PRICE`,
+  od.`NUM`,
+  od.`ENDTIME`,
+  od.`STOREKEEPER`,
+  od.`STOREID`,
+  od.`ORDERID`,
+  od.`STATE`,
+
+  g.`MODEL` GMODEL,
+  g.`NAME` GNAME,
+  g.`GOODSTYPEID`,
+  
+  gt.`NAME` GTNAME,
+  gt.`STOREID` GTSTOREID,
+  
+  s.`NAME` SNAME,
+  
+  s.`EMPID` , 
+  
+  e.`NAME` ENAME
+  
+FROM `orderdetail` od
+LEFT JOIN `goods`  g
+ON od.`GOODSID` = g.`ID`
+LEFT JOIN `goodstype` gt
+ON g.`GOODSTYPEID` = gt.`ID`
+LEFT JOIN `store` s
+ON od.`STOREID` = s.`ID`
+LEFT JOIN `EMP` e
+ON s.`EMPID` = e.`ID`
+<where>
+	
+	
+	 od.`ORDERID` = #{orderid}
+
+</where>
+
+
+
+
+</select>  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, GOODSID, PRICE, NUM, ENDTIME, STOREKEEPER, STOREID, ORDERID, STATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="lj.elevator.erp.pojo.OrderdetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orderdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetail
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderdetail
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="lj.elevator.erp.pojo.OrderdetailExample" >
+    delete from orderdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="lj.elevator.erp.pojo.Orderdetail" >
+    insert into orderdetail (ID, GOODSID, PRICE, 
+      NUM, ENDTIME, STOREKEEPER, 
+      STOREID, ORDERID, STATE
+      )
+    values (#{id,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{num,jdbcType=INTEGER}, #{endtime,jdbcType=DATE}, #{storekeeper,jdbcType=VARCHAR}, 
+      #{storeid,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{state,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="lj.elevator.erp.pojo.Orderdetail" >
+    insert into orderdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="goodsid != null" >
+        GOODSID,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+      <if test="endtime != null" >
+        ENDTIME,
+      </if>
+      <if test="storekeeper != null" >
+        STOREKEEPER,
+      </if>
+      <if test="storeid != null" >
+        STOREID,
+      </if>
+      <if test="orderid != null" >
+        ORDERID,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsid != null" >
+        #{goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=DATE},
+      </if>
+      <if test="storekeeper != null" >
+        #{storekeeper,jdbcType=VARCHAR},
+      </if>
+      <if test="storeid != null" >
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="lj.elevator.erp.pojo.OrderdetailExample" resultType="java.lang.Integer" >
+    select count(*) from orderdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update orderdetail
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsid != null" >
+        GOODSID = #{record.goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.price != null" >
+        PRICE = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.num != null" >
+        NUM = #{record.num,jdbcType=INTEGER},
+      </if>
+      <if test="record.endtime != null" >
+        ENDTIME = #{record.endtime,jdbcType=DATE},
+      </if>
+      <if test="record.storekeeper != null" >
+        STOREKEEPER = #{record.storekeeper,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeid != null" >
+        STOREID = #{record.storeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderid != null" >
+        ORDERID = #{record.orderid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update orderdetail
+    set ID = #{record.id,jdbcType=INTEGER},
+      GOODSID = #{record.goodsid,jdbcType=INTEGER},
+      PRICE = #{record.price,jdbcType=DECIMAL},
+      NUM = #{record.num,jdbcType=INTEGER},
+      ENDTIME = #{record.endtime,jdbcType=DATE},
+      STOREKEEPER = #{record.storekeeper,jdbcType=VARCHAR},
+      STOREID = #{record.storeid,jdbcType=INTEGER},
+      ORDERID = #{record.orderid,jdbcType=INTEGER},
+      STATE = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="lj.elevator.erp.pojo.Orderdetail" >
+    update orderdetail
+    <set >
+      <if test="goodsid != null" >
+        GOODSID = #{goodsid,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        NUM = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="endtime != null" >
+        ENDTIME = #{endtime,jdbcType=DATE},
+      </if>
+      <if test="storekeeper != null" >
+        STOREKEEPER = #{storekeeper,jdbcType=VARCHAR},
+      </if>
+      <if test="storeid != null" >
+        STOREID = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        ORDERID = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lj.elevator.erp.pojo.Orderdetail" >
+    update orderdetail
+    set GOODSID = #{goodsid,jdbcType=INTEGER},
+      PRICE = #{price,jdbcType=DECIMAL},
+      NUM = #{num,jdbcType=INTEGER},
+      ENDTIME = #{endtime,jdbcType=DATE},
+      STOREKEEPER = #{storekeeper,jdbcType=VARCHAR},
+      STOREID = #{storeid,jdbcType=INTEGER},
+      ORDERID = #{orderid,jdbcType=INTEGER},
+      STATE = #{state,jdbcType=CHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
