@@ -25,7 +25,6 @@ public class BusinessController {
 			String numS, String codeS, String beTimeS, String endTimeS, Model model) throws Exception {
 
 		String[] targets = new String[] { businesstypeS, businessstateS, customerS, numS, codeS, beTimeS, endTimeS };
-
 		page = businessService.getBusinessList(page, targets);
 		model.addAttribute("page", page);
 		return "/jsp/business_list.jsp";
